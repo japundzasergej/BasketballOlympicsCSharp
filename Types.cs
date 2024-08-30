@@ -59,7 +59,7 @@ public sealed class Standings
             _groupStandings[intKey] = [.. tempGroups[key]];
         }
 
-        // Two separate nested for loops is never a good idea, but working with a fixed sample size such as for a basketball tournament where we're sure there's only 14 different teams so the number of iterations is going to be constantly 3 * 4, with 3 being the number of groups and 4 being the number of teams in the group, doesn't take much computing power.
+        // Two separate nested for loops is never a good idea, but working with a fixed sample size such as for a basketball tournament where we're sure there's only 12 different teams so the number of iterations is going to be constantly 3 * 4, with 3 being the number of groups and 4 being the number of teams in the group, doesn't take much computing power.
 
         for (int i = 1; i <= 3; i++)
         {
