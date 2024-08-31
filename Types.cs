@@ -8,8 +8,8 @@ public sealed record Country(string Team, string ISOCode, int FIBARanking)
 {
     public Tally Tally { get; init; } = new();
     public int Standing { get; set; }
-    public List<Game> GamesPlayed { get; init; } = [];
-    public List<string> OpponentsFaced { get; init; } = [];
+    public IList<Game> GamesPlayed { get; init; } = [];
+    public IList<string> OpponentsFaced { get; init; } = [];
     public int PowerRanking { get; set; }
 };
 
@@ -31,12 +31,13 @@ public sealed record Tally
 
 public sealed class Standings
 {
-    private readonly Dictionary<int, IEnumerable<Country>> _groupStandings = [];
+    private readonly Dictionary<int, IList<Country>> _groupStandings = [];
     private readonly Dictionary<int, IEnumerable<Country>> _quarterFinalsStandings = [];
     private readonly Dictionary<int, IEnumerable<Country>> _semifinalsStandings = [];
     private readonly Dictionary<int, IEnumerable<Country>> _finalStandings = [];
     private readonly Random _random = new();
-    private List<Country> _overallStandingsAfterGroups = [];
+
+    private IList<Country> _overallStandingsAfterGroups = [];
 
     public Standings()
     {
@@ -90,9 +91,9 @@ public sealed class Standings
         RankCountries(_overallStandingsAfterGroups);
     }
 
-    public IEnumerable<Country> InitSemifinals()
+    public IList<Country> InitSemifinals()
     {
-        List<Country> semifinalsGroups = [];
+        ICollection<Country> semifinalsGroups = [];
 
         for (int i = 1; i <= 2; i++)
         {
@@ -112,7 +113,7 @@ public sealed class Standings
                     semifinalsGroups.Add(country);
             }
         }
-        return semifinalsGroups;
+        return [.. semifinalsGroups];
     }
 
     private void SegregateTeamsForSemifinals()
@@ -137,15 +138,9 @@ public sealed class Standings
 
         // First group is selected by concatenating group D and group G and the second by concantenating group E and group F.
 
-        IEnumerable<Country> group1 =
-        [
-            .. _quarterFinalsStandings[4].Concat(_quarterFinalsStandings[7])
-        ];
+        IList<Country> group1 = [.. _quarterFinalsStandings[4].Concat(_quarterFinalsStandings[7])];
 
-        IEnumerable<Country> group2 =
-        [
-            .. _quarterFinalsStandings[5].Concat(_quarterFinalsStandings[6])
-        ];
+        IList<Country> group2 = [.. _quarterFinalsStandings[5].Concat(_quarterFinalsStandings[6])];
 
         // Afterwards choose random pairings from aformentioned groups between two teams that haven't already played each other. Zero and first index representing a random team from the first and second group and respectively second and third index representing the other pairing.
 
@@ -160,8 +155,8 @@ public sealed class Standings
         {
             if (i == 1)
                 i++;
-            var team1 = finalGroup1.ElementAt(i).Team;
-            var team2 = finalGroup1.ElementAt(i + 1).Team;
+            var team1 = finalGroup1[i].Team;
+            var team2 = finalGroup1[i + 1].Team;
             Console.WriteLine($"\t\t{team1} - {team2}");
             if (i == 2)
             {
@@ -174,8 +169,8 @@ public sealed class Standings
             if (i == 1)
                 i++;
 
-            var team1 = finalGroup2.ElementAt(i).Team;
-            var team2 = finalGroup2.ElementAt(i + 1).Team;
+            var team1 = finalGroup2[i].Team;
+            var team2 = finalGroup2[i + 1].Team;
             Console.WriteLine($"\t\t{team1} - {team2}");
             if (i == 1)
             {
@@ -190,7 +185,7 @@ public sealed class Standings
         return ([.. finalGroup1], [.. finalGroup2]);
     }
 
-    private IEnumerable<Country> EliminationPhasePicker(List<Country> group)
+    private Country[] EliminationPhasePicker(IList<Country> group)
     {
         var finalGroup = new Country[group.Count];
 
@@ -238,7 +233,7 @@ public sealed class Standings
     // Recursive approach that doesn't quite work.
 
     //private IEnumerable<Country> EliminationPhasePicker(
-    //    List<Country> group,
+    //    IEnumerable<Country> group,
     //    Country[] finalGroup,
     //    int maxRecursionDepth = 4
     //)
@@ -263,14 +258,14 @@ public sealed class Standings
     //    int firstIndex = _random.Next(0, 2);
     //    int secondIndex = _random.Next(2, 4);
 
-    //    finalGroup[0] = group[firstIndex];
-    //    finalGroup[1] = group[secondIndex];
+    //    finalGroup[0] = group.ElementAt(firstIndex);;
+    //    finalGroup[1] = group.ElementAt(secondIndex);;
 
     //    int thirdIndex = firstIndex == 0 ? 1 : 0;
     //    int fourthIndex = secondIndex == 2 ? 3 : 2;
 
-    //    finalGroup[2] = group[thirdIndex];
-    //    finalGroup[3] = group[fourthIndex];
+    //    finalGroup[2] = group.ElementAt(thirdIndex);;
+    //    finalGroup[3] = group.ElementAt(fourthIndex);;
 
     //    return EliminationPhasePicker(group, finalGroup, maxRecursionDepth - 1);
     //}
@@ -293,21 +288,24 @@ public sealed class Standings
 
         for (int i = 4; i <= 7; i++)
         {
-            var countries = _overallStandingsAfterGroups.Where(c =>
-                c.Standing > previousStandings && c.Standing <= standings
-            );
+            IList<Country> countries =
+            [
+                .. _overallStandingsAfterGroups.Where(c =>
+                    c.Standing > previousStandings && c.Standing <= standings
+                )
+            ];
 
             _quarterFinalsStandings[i] = [.. countries];
 
             Console.WriteLine($"\t Šešir {Converter.ConvertToChar(i)}:\n");
-            Console.WriteLine($"\t\t{countries.ElementAt(0).Team}");
-            Console.WriteLine($"\t\t{countries.ElementAt(1).Team}");
+            Console.WriteLine($"\t\t{countries[0].Team}");
+            Console.WriteLine($"\t\t{countries[1].Team}");
             previousStandings += 2;
             standings += 2;
         }
     }
 
-    public Dictionary<int, IEnumerable<Country>> GroupRankings(bool final)
+    public Dictionary<int, IList<Country>> GroupRankings(bool final)
     {
         if (final)
         {
@@ -323,7 +321,7 @@ public sealed class Standings
         {
             var group = _groupStandings[i];
 
-            group = group.OrderByDescending(c => c, new TeamRankingComparer());
+            group = [.. group.OrderByDescending(c => c, new TeamRankingComparer())];
 
             // After the group stage is finalized all the countries will be added to the overall ranking collection which is empty untill this point.
 

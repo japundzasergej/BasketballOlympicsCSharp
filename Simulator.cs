@@ -28,13 +28,13 @@ public class Simulator : ISimulator
     {
         var semifinalsGroups = _standings.InitSemifinals();
 
-        List<Country> winners = [];
-        List<Country> losers = [];
+        IList<Country> winners = [];
+        IList<Country> losers = [];
 
         Console.WriteLine("Polufinale:\n");
 
-        var game1 = SimulateGame(semifinalsGroups.ElementAt(0), semifinalsGroups.ElementAt(1));
-        var game2 = SimulateGame(semifinalsGroups.ElementAt(2), semifinalsGroups.ElementAt(3));
+        var game1 = SimulateGame(semifinalsGroups[0], semifinalsGroups[1]);
+        var game2 = SimulateGame(semifinalsGroups[2], semifinalsGroups[3]);
 
         PrintGamePlayed(game1);
         PrintGamePlayed(game2);
@@ -54,7 +54,7 @@ public class Simulator : ISimulator
         SimulateFinalGames(winners, losers);
     }
 
-    private void SimulateFinalGames(List<Country> winners, List<Country> losers)
+    private void SimulateFinalGames(IList<Country> winners, IList<Country> losers)
     {
         string bronze;
         string silver;
@@ -154,8 +154,8 @@ public class Simulator : ISimulator
 
                 var group = _standings.GroupRankings(false)[j];
 
-                var game1 = SimulateGame(group.ElementAt(team1), group.ElementAt(team2));
-                var game2 = SimulateGame(group.ElementAt(team3), group.ElementAt(team4));
+                var game1 = SimulateGame(group[team1], group[team2]);
+                var game2 = SimulateGame(group[team3], group[team4]);
 
                 PrintGamePlayed(game1);
 

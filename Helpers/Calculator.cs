@@ -14,7 +14,7 @@ public static class Calculator
         // The ranking when initialized is calculated according to the quality of the opposing teams in the friendly matches leading up to the tournament. It's a range from 10 to a 100.
 
         int fibaRanking = PowerRankingConstants.IndexRankings(ISOCode);
-        int powerRanking = PowerRankingConstants.BaseRanking - fibaRanking;
+        int powerRanking = PowerRankingConstants.BaseRanking - (fibaRanking * 2);
 
         foreach (var game in games)
         {
