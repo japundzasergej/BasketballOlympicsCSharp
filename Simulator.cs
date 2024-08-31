@@ -287,17 +287,24 @@ public class Simulator : ISimulator
 
         // Update power rankings according to the game result.
 
-        country1.PowerRanking += Calculator.UpdatePowerRanking(
-            country1.ISOCode,
-            country2.ISOCode,
-            team1PointDifferential,
-            team1Won
+        PowerRankingLimiter(
+            country1,
+            Calculator.UpdatePowerRanking(
+                country1.ISOCode,
+                country2.ISOCode,
+                team1PointDifferential,
+                team1Won
+            )
         );
-        country2.PowerRanking += Calculator.UpdatePowerRanking(
-            country2.ISOCode,
-            country1.ISOCode,
-            team2PointDifferential,
-            team1Won
+
+        PowerRankingLimiter(
+            country2,
+            Calculator.UpdatePowerRanking(
+                country1.ISOCode,
+                country2.ISOCode,
+                team1PointDifferential,
+                team1Won
+            )
         );
 
         var game = new Game(
@@ -394,5 +401,20 @@ public class Simulator : ISimulator
         }
 
         return winnerLoser;
+    }
+
+    private static void PowerRankingLimiter(Country country, int newRanking)
+    {
+        if (Math.Sign(newRanking) > 0 && country.PowerRanking >= 100)
+        {
+            country.PowerRanking = 100;
+            return;
+        }
+        else if (Math.Sign(newRanking) < 0 && country.PowerRanking <= 10)
+        {
+            country.PowerRanking = 10;
+            return;
+        }
+        country.PowerRanking += newRanking;
     }
 }

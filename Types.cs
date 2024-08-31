@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BasketballOlympics.Helpers;
@@ -34,7 +35,6 @@ public sealed class Standings
     private readonly Dictionary<int, IList<Country>> _groupStandings = [];
     private readonly Dictionary<int, IEnumerable<Country>> _quarterFinalsStandings = [];
     private readonly Dictionary<int, IEnumerable<Country>> _semifinalsStandings = [];
-    private readonly Dictionary<int, IEnumerable<Country>> _finalStandings = [];
     private readonly Random _random = new();
 
     private IList<Country> _overallStandingsAfterGroups = [];
