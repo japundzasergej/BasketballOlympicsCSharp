@@ -205,9 +205,6 @@ public sealed class Standings
         finalGroup[2] = group[thirdIndex];
         finalGroup[3] = group[fourthIndex];
 
-        var testing1 = PlayedAgainstEachOther(finalGroup[0], finalGroup[1]);
-        var testing2 = PlayedAgainstEachOther(finalGroup[2], finalGroup[3]);
-
         if (PlayedAgainstEachOther(finalGroup[0], finalGroup[1]))
         {
             finalGroup[1] = group[fourthIndex];
