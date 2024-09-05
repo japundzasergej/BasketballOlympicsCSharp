@@ -196,7 +196,7 @@ public class Simulator : ISimulator
         if (team1PullingOut is true && team2PullingOut is true)
         {
             team1PullingOut = !team1PullingOut;
-            team2PullingOut = !team1PullingOut;
+            team2PullingOut = !team2PullingOut;
         }
 
         if (team1PullingOut || team2PullingOut)
