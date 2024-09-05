@@ -379,7 +379,7 @@ public class Simulator : ISimulator
     private static void PrintGamePlayed(Game game)
     {
         Console.WriteLine(
-            $"\t\t {game.TeamName} - {game.Opponent} ({game.Result}) {(string.IsNullOrEmpty(game.Pullout) ? "" : $" ({game.Pullout})")}"
+            $"\n\t\t{game.Date:dd/MM/yy}\t {game.TeamName} - {game.Opponent} ({game.Result}) {(string.IsNullOrEmpty(game.Pullout) ? "" : $" ({game.Pullout})")}"
         );
     }
 
