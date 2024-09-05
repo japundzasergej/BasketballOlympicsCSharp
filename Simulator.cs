@@ -189,7 +189,6 @@ public class Simulator : ISimulator
 
         var team1PullingOut = _random.Next(1, 100) <= _teamPullingOutChance;
         var team2PullingOut = _random.Next(1, 100) <= _teamPullingOutChance;
-        var countries = new Country[] { country1, country2 };
 
         // There have been cases where both teams pulled out, it doesn't make much sense so I've removed that feature.
 
