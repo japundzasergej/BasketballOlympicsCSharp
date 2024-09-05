@@ -28,8 +28,8 @@ public class Simulator : ISimulator
     {
         var semifinalsGroups = _standings.InitSemifinals();
 
-        IList<Country> winners = [];
-        IList<Country> losers = [];
+        ICollection<Country> winners = [];
+        ICollection<Country> losers = [];
 
         Console.WriteLine("Polufinale:\n");
 
@@ -51,7 +51,7 @@ public class Simulator : ISimulator
             }
         }
 
-        SimulateFinalGames(winners, losers);
+        SimulateFinalGames([.. winners], [.. losers]);
     }
 
     private void SimulateFinalGames(IList<Country> winners, IList<Country> losers)
